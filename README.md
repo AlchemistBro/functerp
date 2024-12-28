@@ -1,15 +1,11 @@
-# Tiny FunC compiler for Brus-16
+# Tiny FunC interpreter in Python
 
-Subset of FunC (TON smart contracts language) -> Brus-16 assembler.
+Interpreter of a FunC subset (TON smart contracts language). Hand-written lexer and parser, no parsing libs.
 
 WIP!
 
 ## Cloning:
 
 ```
-git clone --recurse-submodules https://github.com/AlchemistBro/func-brus16.git
+git clone https://github.com/AlchemistBro/func-brus16.git
 ```
-
-## Backend:
-
-Assembler and emulator of [Brus-16](https://github.com/true-grue/Brus-16) (Peter Sovietov), MIT. In `libs/brus16`.
