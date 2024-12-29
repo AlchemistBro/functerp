@@ -7,6 +7,7 @@ from .nodes import *
 #   + - |            3
 #   unary -          between 3 and 4: `- a * b` is `-(a * b)`
 #   * / &            4
+#   unary ~          tightest
 BINOPS = {
     '==': 2, '!=': 2, '<': 2, '>': 2, '<=': 2, '>=': 2,
     '+': 3, '-': 3, '|': 3,
@@ -199,6 +200,11 @@ class Parser:
             pos = self.pos()
             self.next()
             return Neg(self.expr(NEG_PREC), pos)
+        if self.check('op', '~'):
+            # bitwise not binds tighter than anything, `~ x * y` is `(~ x) * y`
+            pos = self.pos()
+            self.next()
+            return Not(self.unary(), pos)
         return self.postfix(self.primary())
 
     def postfix(self, e):

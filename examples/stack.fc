@@ -1,0 +1,29 @@
+{-
+    Stack of digits packed into one int.
+    `~` calls write the new value back into the variable.
+-}
+
+const BASE = 10;
+
+int push(int s, int x) {
+    return s * BASE + x;
+}
+
+(int, int) ~pop(int s) {
+    return (s / BASE, s - s / BASE * BASE);
+}
+
+int is_empty(int s) {
+    return s == 0;
+}
+
+(int, int) main() {
+    int s = 0;
+    s = s.push(3).push(4).push(5);
+    int top = s~pop();
+    int sum = 0;
+    while (~ is_empty(s)) {
+        sum += s~pop();
+    }
+    return (top, sum);
+}

@@ -37,6 +37,12 @@ class Neg:
 
 
 @dataclass(frozen=True)
+class Not:  # bitwise ~ x
+    expr: object
+    pos: tuple = None
+
+
+@dataclass(frozen=True)
 class BinOp:
     op: str
     left: object

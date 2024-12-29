@@ -81,6 +81,11 @@ def tokenize(src):
             move(1)
         elif c in '.~':
             m = WORD.match(src, i + 1)
+            if not m and c == '~':
+                # `~ x` is bitwise not, `~f` is a name
+                toks.append(Token('op', '~', line, col))
+                move(1)
+                continue
             if not m:
                 raise FuncError(f'expected name after {c!r}', line, col)
             toks.append(Token('method', c + m.group(), line, col))

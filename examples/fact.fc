@@ -1,0 +1,22 @@
+;; recursion and loops
+
+int fact(int n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * fact(n - 1);
+}
+
+int fact_loop(int n) {
+    int r = 1;
+    repeat (n) {
+        r *= n;
+        n -= 1;
+    }
+    return r;
+}
+
+int main() {
+    ~dump(fact_loop(10));
+    return fact(30);
+}

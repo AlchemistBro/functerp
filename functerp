@@ -1,0 +1,37 @@
+#!/usr/bin/env python3
+
+import sys
+import argparse
+from pprint import pprint
+from src.lexer import FuncError
+from src.interp import load, run
+
+
+def cmd():
+    argsp = argparse.ArgumentParser(
+        description="Tiny FunC interpreter",
+        epilog="Examples:\n  functerp examples/fact.fc\n  functerp examples/fact.fc -a",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    argsp.add_argument("filename", help="FunC source file")
+    argsp.add_argument("-a", "--ast", action="store_true",
+                       help="print AST after desugar (.~ calls, removed non-impure calls)")
+    args = argsp.parse_args()
+
+    with open(args.filename, encoding="utf-8") as f:
+        src = f.read()
+    try:
+        if args.ast:
+            consts, funcs = load(src)
+            pprint(consts, width=100)
+            for f in funcs.values():
+                pprint(f, width=100)
+            return 0
+        return run(src)
+    except FuncError as e:
+        print(f"{args.filename}:{e}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(cmd())

@@ -1,0 +1,16 @@
+;; classic FunC trap: function without `impure` is dropped if its result is unused
+
+() check(int x) {
+    throw_if(100, x < 0);
+}
+
+() check_impure(int x) impure {
+    throw_if(101, x < 0);
+}
+
+int main() {
+    check(-1);           ;; removed by the compiler, no exception!
+    ~dump(-7 / 2);       ;; -4, rounds to -inf
+    check_impure(-1);    ;; this one throws
+    return 0;
+}
