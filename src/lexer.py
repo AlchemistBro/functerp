@@ -19,7 +19,9 @@ class Token:
 
 
 KEYWORDS = {
-    'int', 'const', 'return', 'if', 'else', 'while', 'repeat',
+    'int', 'var', 'const', 'return',
+    'if', 'ifnot', 'else', 'elseif', 'elseifnot',
+    'while', 'repeat', 'do', 'until',
     'impure', 'inline', 'inline_ref',
 }
 
