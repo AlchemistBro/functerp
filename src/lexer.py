@@ -26,9 +26,11 @@ KEYWORDS = {
 }
 
 OPS = {
-    '+', '-', '*', '/', '&', '|',
+    '+', '-', '*', '&', '|',
+    '/', '%', '^/', '^%', '~/', '~%', '/%',
     '==', '!=', '<', '>', '<=', '>=',
-    '=', '+=', '-=', '*=', '/=', '&=', '|=',
+    '=', '+=', '-=', '*=', '&=', '|=',
+    '/=', '%=', '^/=', '^%=', '~/=', '~%=',
 }
 
 PUNCT = set('()[]{},;')
@@ -81,10 +83,11 @@ def tokenize(src):
             move(1)
         elif c in '.~':
             m = WORD.match(src, i + 1)
-            if not m and c == '~':
-                # `~ x` is bitwise not, `~f` is a name
-                toks.append(Token('op', '~', line, col))
-                move(1)
+            if c == '~' and (not m or '~' + m.group() in OPS):
+                # `~ x` is bitwise not, `~/` is an op, `~f` is a name
+                op = '~' + m.group() if m else '~'
+                toks.append(Token('op', op, line, col))
+                move(len(op))
                 continue
             if not m:
                 raise FuncError(f'expected name after {c!r}', line, col)

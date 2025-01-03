@@ -46,10 +46,20 @@ def b(x):
     return -1 if x else 0  # true is -1 in FunC
 
 
-def div(a, c):
+def div(a, c, mode='/'):
     if c == 0:
         raise Throw(INT_OVERFLOW)  # TVM: division by zero is int overflow
-    return a // c  # rounds to -inf, same as FunC
+    match mode:
+        case '/':  # to -inf, python // does the same
+            return a // c
+        case '^':  # to +inf
+            return -(-a // c)
+        case '~':  # to nearest, .5 goes to +inf: 3 ~/ 2 = 2, -3 ~/ 2 = -1
+            return (2 * a + c) // (2 * c)
+
+
+def mod(a, c, mode='/'):
+    return a - div(a, c, mode) * c
 
 
 OPS = {
@@ -57,6 +67,12 @@ OPS = {
     '-': lambda a, c: check(a - c),
     '*': lambda a, c: check(a * c),
     '/': lambda a, c: check(div(a, c)),
+    '^/': lambda a, c: check(div(a, c, '^')),
+    '~/': lambda a, c: check(div(a, c, '~')),
+    '%': lambda a, c: mod(a, c),
+    '^%': lambda a, c: mod(a, c, '^'),
+    '~%': lambda a, c: mod(a, c, '~'),
+    '/%': lambda a, c: (check(div(a, c)), mod(a, c)),
     '&': lambda a, c: a & c,
     '|': lambda a, c: a | c,
     '==': lambda a, c: b(a == c),
