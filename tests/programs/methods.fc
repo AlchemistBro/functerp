@@ -1,0 +1,23 @@
+int add(int x, int y) { return x + y; }
+int mul(int x, int y) { return x * y; }
+
+;; x~f() looks for ~f first, x.f() looks for .f first
+(int, int) ~next(int x) { return (x + 1, x * 100); }
+int .next(int x) { return -1; }
+int next(int x) { return -2; }
+
+(int, int) ~pop2(int s) { return (s / 100, s - s / 100 * 100); }
+
+(int, int, int, int, int, int) main() {
+    int x = 2;
+    int a = x.add(3).mul(10);
+    int b = x~next();
+    int c = x.next();
+    int d = next(x);
+    int s = 1234;
+    int lo = s~pop2();
+    return (a, b, c, d, x, lo + s);
+}
+{- out:
+result: (50, 200, -1, -2, 3, 46)
+-}

@@ -1,0 +1,21 @@
+;; true is -1, so ~ works as logical not and & | as and / or
+int main() {
+    ~dump(2 > 1);
+    ~dump(2 < 1);
+    ~dump(~ (2 > 1));
+    ~dump((1 < 2) & (2 < 3));
+    ~dump((1 > 2) | (2 < 3));
+    if (5) { ~dump(1); }
+    ifnot (0) { ~dump(2); }
+    return 0;
+}
+{- out:
+#DEBUG#: s0 = -1
+#DEBUG#: s0 = 0
+#DEBUG#: s0 = 0
+#DEBUG#: s0 = -1
+#DEBUG#: s0 = -1
+#DEBUG#: s0 = 1
+#DEBUG#: s0 = 2
+result: 0
+-}

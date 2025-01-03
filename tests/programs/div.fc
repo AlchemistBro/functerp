@@ -1,0 +1,7 @@
+;; / rounds to -inf, not to zero
+(int, int, int, int) main() {
+    return (7 / 2, -7 / 2, 7 / -2, -7 / -2);
+}
+{- out:
+result: (3, -4, -4, 3)
+-}

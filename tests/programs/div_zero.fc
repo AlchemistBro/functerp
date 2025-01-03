@@ -1,0 +1,7 @@
+int main() {
+    int z = 0;
+    return 1 / z;
+}
+{- out:
+exit code: 4
+-}

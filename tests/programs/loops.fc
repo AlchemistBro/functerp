@@ -1,0 +1,32 @@
+int classify(int x) {
+    if (x < 0) {
+        return -1;
+    } elseif (x == 0) {
+        return 0;
+    } elseifnot (x - 1) {
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+(int, int, int, int, int, int, int) main() {
+    int i = 0;
+    int s = 0;
+    while (i < 5) {
+        s += i;
+        i += 1;
+    }
+    int r = 0;
+    repeat (3) { r += 10; }
+    repeat (-1) { r += 1000; }
+    int n = 0;
+    do {
+        int t = n + 3;
+        n = t;
+    } until (t > 10);
+    return (s, r, n, classify(-5), classify(0), classify(1), classify(9));
+}
+{- out:
+result: (10, 30, 12, -1, 0, 1, 2)
+-}

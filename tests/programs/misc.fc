@@ -1,0 +1,17 @@
+{- comments {- can be nested -} in FunC -}
+const A = 0x10;
+const int B = A * 2 - 1;
+
+int main() {
+    int x+y = 5;          ;; x+y is an identifier, ops need spaces
+    int x = 1;
+    int x = x + x+y;      ;; redeclaration is just assignment
+    ~dump(abs(-3) + min(B, 100) + max(-1, -2));
+    throw_unless(42, x == 6);
+    throw_unless(43, x == 7);
+    return x;
+}
+{- out:
+#DEBUG#: s0 = 33
+exit code: 43
+-}

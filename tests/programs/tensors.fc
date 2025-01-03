@@ -1,0 +1,17 @@
+(int, int) divmod(int a, int b) {
+    return (a / b, a - a / b * b);
+}
+
+((int, int), int) nested() {
+    return ((1, 2), 3);
+}
+
+(int, int, int, int, int) main() {
+    (int q, int r) = divmod(17, 5);
+    ((int a, int b), int c) = nested();
+    (q, r) = (r, q);
+    return (q, r, a, b, c);
+}
+{- out:
+result: (2, 3, 1, 2, 3)
+-}

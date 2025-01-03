@@ -1,0 +1,12 @@
+;; int is 257-bit signed: -2^256 .. 2^256 - 1
+int main() {
+    int x = 1;
+    repeat (255) { x *= 2; }
+    ~dump(- x - x);     ;; -2^256 still fits (- x * 2 would overflow first)
+    x *= 2;            ;; 2^256 does not
+    return x;
+}
+{- out:
+#DEBUG#: s0 = -115792089237316195423570985008687907853269984665640564039457584007913129639936
+exit code: 4
+-}

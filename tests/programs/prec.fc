@@ -1,0 +1,19 @@
+;; FunC precedence: & is like *, | is like +, unary - is below *
+int main() {
+    ~dump(1 < 2 * 3);       ;; 1 < 6
+    ~dump(- 2 * 3 + 10);    ;; -(2 * 3) + 10
+    ~dump(6 & 3 | 8);       ;; (6 & 3) | 8
+    ~dump(1 + 6 & 3);       ;; 1 + (6 & 3)
+    ~dump(~ 0 * 5);         ;; (~ 0) * 5
+    ~dump(10 - 3 - 2);
+    return 100 / 10 / 5;
+}
+{- out:
+#DEBUG#: s0 = -1
+#DEBUG#: s0 = 4
+#DEBUG#: s0 = 10
+#DEBUG#: s0 = 3
+#DEBUG#: s0 = -5
+#DEBUG#: s0 = 5
+result: 2
+-}

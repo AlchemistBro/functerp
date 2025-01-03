@@ -1,0 +1,30 @@
+;; calls of non-impure funcs with unused result are removed
+
+int log(int x) impure {
+    ~dump(x);
+    return x;
+}
+
+int pure(int x) {
+    ~dump(x * 1000);    ;; never seen when the call is dropped
+    return x;
+}
+
+() check(int x) {
+    throw_if(100, x < 0);
+}
+
+int main() {
+    check(-1);          ;; dropped, no exit code 100
+    pure(1);            ;; dropped
+    pure(log(2));       ;; pure() dropped, but impure log() is kept
+    int v = pure(3);    ;; result used, so called
+    max(log(4), 0);     ;; builtin max is pure too
+    return v;
+}
+{- out:
+#DEBUG#: s0 = 2
+#DEBUG#: s0 = 3000
+#DEBUG#: s0 = 4
+result: 3
+-}
