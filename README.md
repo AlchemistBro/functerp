@@ -67,18 +67,18 @@ Not a C-like language with FunC syntax, but FunC rules:
   ...
   check(-1);                 ;; removed, no exception!
   ```
-* **`/` rounds to -inf**: `-7 / 2 == -4`.
+* **`/` rounds to -inf**: `(- 7) / 2 == -4`. Also `^/` (to +inf), `~/` (to nearest), `%` `^%` `~%`, `/%` gives `(q, r)`. Same for shifts: `>>`, `^>>`, `~>>`.
 * **true is -1**, false is 0. So `~` is both bitwise and logical not: `~ (1 < 2) == 0`.
 * **257-bit int.** Overflow and division by zero throw exit code 4, like TVM.
 * **Operators need spaces.** `x+y` is one identifier, `x + y` is addition.
-* **FunC precedence.** `&` is on the `*` level, `|` on the `+` level, unary `-` is below `*`: `- a * b` is `-(a * b)`.
+* **FunC precedence.** `&` is on the `*` level, `|` on the `+` level, shifts are below `+`: `1 + 1 << 2 == 8`. Unary `-` is below `*`: `- 7 / 2` is `-(7 / 2) == -3`.
 * **Declare before use.** A function must be defined or forward declared (`int f(int x);`) before it is called.
 * Tensors: `(int, int) f()`, `(int a, int b) = f();`, nested `((int a, int b), int c)`.
 * `{- nested {- comments -} -}`, `;;` comments.
 
 ## Subset
 
-`int`, `var`, `const`, functions, recursion, tensors, `if` / `ifnot` / `elseif` / `elseifnot` / `else`, `while`, `repeat`, `do ... until`, `+ - * / & | ~`, comparisons, `+= -= *= /= &= |=`.
+`int`, `var`, `const`, functions, recursion, tensors, `if` / `ifnot` / `elseif` / `elseifnot` / `else`, `while`, `repeat`, `do ... until`, `+ - * & | ~`, `/ % ^/ ^% ~/ ~% /%`, `<< >> ^>> ~>>`, comparisons and `<=>`, `?:`, assignment forms `+= <<= ~/=` etc.
 
 Builtins: `~dump(x)` (prints `#DEBUG#: s0 = x`, like TVM `DUMP`), `throw`, `throw_if`, `throw_unless`, `min`, `max`, `abs`.
 
@@ -95,6 +95,5 @@ Golden programs are in `tests/programs`, expected output is in the `{- out: ... 
 
 ## Roadmap:
 
-* `%`, `^/`, `~/`, `<< >>`, `?:`, `<=>`
 * `global`, `#include`, `asm` functions
 * check results against the real FunC compiler and TVM
