@@ -62,6 +62,20 @@ def mod(a, c, mode='/'):
     return a - div(a, c, mode) * c
 
 
+def shift(a, n, mode):
+    if not 0 <= n <= 1023:
+        raise Throw(RANGE_CHECK)
+    match mode:
+        case '<<':
+            return check(a << n)
+        case '>>':  # to -inf
+            return a >> n
+        case '^>>':  # to +inf
+            return -(-a >> n)
+        case '~>>':  # to nearest
+            return (a + (1 << n >> 1)) >> n
+
+
 OPS = {
     '+': lambda a, c: check(a + c),
     '-': lambda a, c: check(a - c),
@@ -73,6 +87,11 @@ OPS = {
     '^%': lambda a, c: mod(a, c, '^'),
     '~%': lambda a, c: mod(a, c, '~'),
     '/%': lambda a, c: (check(div(a, c)), mod(a, c)),
+    '<<': lambda a, n: shift(a, n, '<<'),
+    '>>': lambda a, n: shift(a, n, '>>'),
+    '^>>': lambda a, n: shift(a, n, '^>>'),
+    '~>>': lambda a, n: shift(a, n, '~>>'),
+    '<=>': lambda a, c: (a > c) - (a < c),
     '&': lambda a, c: a & c,
     '|': lambda a, c: a | c,
     '==': lambda a, c: b(a == c),
@@ -195,6 +214,8 @@ class Interp:
                 a = num(self.eval(a, env), a.pos)
                 c = num(self.eval(c, env), c.pos)
                 return OPS[op](a, c)
+            case Cond(c, yes, no):
+                return self.eval(yes if self.truth(c, env) else no, env)
             case Assign('=', target, value):
                 v = self.eval(value, env)
                 self.assign(target, v, env)

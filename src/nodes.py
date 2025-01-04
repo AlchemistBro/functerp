@@ -51,6 +51,14 @@ class BinOp:
 
 
 @dataclass(frozen=True)
+class Cond:  # c ? a : b
+    cond: object
+    yes: object
+    no: object
+    pos: tuple = None
+
+
+@dataclass(frozen=True)
 class Assign:  # op is '=' or '+=' etc
     op: str
     target: object

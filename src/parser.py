@@ -3,22 +3,27 @@ from .nodes import *
 
 # FunC precedence, bigger binds tighter:
 #   =  +=  ...       1  (right)
-#   == != < > <= >=  2
-#   + - |            3
-#   unary -          between 3 and 4: `- a * b` is `-(a * b)`
-#   * / &            4
+#   ? :              2  (right)
+#   == < <=> ...     3
+#   << >> ^>> ~>>    4
+#   + - |            5
+#   unary -          between 5 and 6: `- a * b` is `-(a * b)`
+#   * / % & ...      6
 #   unary ~          tightest
 BINOPS = {
-    '==': 2, '!=': 2, '<': 2, '>': 2, '<=': 2, '>=': 2,
-    '+': 3, '-': 3, '|': 3,
-    '*': 4, '&': 4,
-    '/': 4, '%': 4, '^/': 4, '^%': 4, '~/': 4, '~%': 4, '/%': 4,
+    '==': 3, '!=': 3, '<': 3, '>': 3, '<=': 3, '>=': 3, '<=>': 3,
+    '<<': 4, '>>': 4, '^>>': 4, '~>>': 4,
+    '+': 5, '-': 5, '|': 5,
+    '*': 6, '&': 6,
+    '/': 6, '%': 6, '^/': 6, '^%': 6, '~/': 6, '~%': 6, '/%': 6,
 }
 ASSIGN = {
     '=', '+=', '-=', '*=', '&=', '|=',
     '/=', '%=', '^/=', '^%=', '~/=', '~%=',
+    '<<=', '>>=', '^>>=', '~>>=',
 }
-NEG_PREC = 4
+TERNARY_PREC = 2
+NEG_PREC = 6
 SPECS = ('impure', 'inline', 'inline_ref')
 
 
@@ -192,6 +197,13 @@ class Parser:
                     return left
                 self.next()
                 left = Assign(t.val, left, self.expr(1), pos)
+            elif t.val == '?':
+                if min_prec > TERNARY_PREC:
+                    return left
+                self.next()
+                yes = self.expr()
+                self.expect('op', ':')
+                left = Cond(left, yes, self.expr(TERNARY_PREC), pos)
             elif t.val in BINOPS and BINOPS[t.val] >= min_prec:
                 self.next()
                 right = self.expr(BINOPS[t.val] + 1)

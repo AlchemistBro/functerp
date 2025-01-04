@@ -1,0 +1,30 @@
+;; shifts are between + and comparisons
+int log(int x) impure {
+    ~dump(x);
+    return x;
+}
+
+int main() {
+    ~dump((1 << 4, (- 16) >> 2, (- 17) >> 2, (- 17) ^>> 2));
+    ~dump((17 ~>> 2, 18 ~>> 2, (- 18) ~>> 2));
+    ~dump((1 + 1 << 2, 1 << 2 == 4, 1 << 255 >> 255));
+    ~dump((3 <=> 5, 5 <=> 5, 7 <=> 5));
+    int x = 5;
+    int y = x > 3 ? x * 2 : 0;
+    ~dump((x > 0 ? 1 : 2, x < 0 ? -1 : x == 0 ? 0 : 1, y));
+    x > 0 ? log(7) : 0;     ;; kept, a branch is impure
+    x > 0 ? x + 1 : 0;      ;; dropped
+    x <<= 3;
+    ~dump(x);
+    return 1 << 1024;       ;; shift > 1023 is range check error
+}
+{- out:
+#DEBUG#: s0 = (16, -4, -5, -4)
+#DEBUG#: s0 = (4, 5, -4)
+#DEBUG#: s0 = (8, -1, 1)
+#DEBUG#: s0 = (-1, 0, 1)
+#DEBUG#: s0 = (1, 1, 10)
+#DEBUG#: s0 = 7
+#DEBUG#: s0 = 40
+exit code: 5
+-}

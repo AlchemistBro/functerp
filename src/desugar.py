@@ -120,6 +120,11 @@ class Desugar:
                 return self.residual(x)
             case BinOp(_, a, b):
                 return self.residual(a) + self.residual(b)
+            case Cond(c, a, b):
+                # only one branch runs, so keep the whole thing if a branch has effects
+                if self.residual(a) or self.residual(b):
+                    return [e]
+                return self.residual(c)
         return []
 
     # -- exprs
@@ -142,6 +147,8 @@ class Desugar:
                 return Not(self.expr(x), pos)
             case BinOp(op, a, b, pos):
                 return BinOp(op, self.expr(a), self.expr(b), pos)
+            case Cond(c, a, b, pos):
+                return Cond(self.expr(c), self.expr(a), self.expr(b), pos)
             case Assign(op, target, value, pos):
                 value = self.expr(value)
                 if op != '=' and not isinstance(target, Var):
